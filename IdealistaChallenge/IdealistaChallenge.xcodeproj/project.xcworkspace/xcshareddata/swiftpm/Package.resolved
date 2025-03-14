@@ -1,0 +1,15 @@
+{
+  "originHash" : "bc635e12edf2b9be5ea2fe9262636f261f93050bbf4b4327253d13d0ea71b2fb",
+  "pins" : [
+    {
+      "identity" : "infralayersdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ObjectQuindos/InfraLayerSDK.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "1d72e392e568710bd8b9e396e7bcc97f6f347b12"
+      }
+    }
+  ],
+  "version" : 3
+}
