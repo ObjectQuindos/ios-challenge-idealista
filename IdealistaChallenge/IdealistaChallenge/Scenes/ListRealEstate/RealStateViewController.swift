@@ -5,7 +5,7 @@
 
 import UIKit
 
-class RealEstateViewController: UIViewController {
+class RealEstateViewController: BaseViewController {
     
     // MARK: - UI Elements
     
@@ -14,12 +14,10 @@ class RealEstateViewController: UIViewController {
         return tableView
     }()
     
-    private let activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .large)
-        indicator.color = .darkGray
-        indicator.hidesWhenStopped = true
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        return indicator
+    private let refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.tintColor = .darkGray
+        return refreshControl
     }()
     
     private let presenter: RealEstateListPresenter
@@ -48,6 +46,7 @@ class RealEstateViewController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
+        configureRefreshControl()
         
         Task {
             await presenter.loadRealEstates()
@@ -58,19 +57,26 @@ class RealEstateViewController: UIViewController {
         
         title = "Propiedades"
         view.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
-        
         view.addSubview(tableView)
-        view.addSubview(activityIndicator)
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
-            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+    }
+    
+    private func configureRefreshControl() {
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        tableView.refreshControl = refreshControl
+    }
+    
+    @objc private func refreshData() {
+        
+        Task {
+            await presenter.loadRealEstates()
+        }
     }
 }
 
@@ -81,16 +87,20 @@ extension RealEstateViewController: RealEstateListViewProtocol {
     func showLoading() {
         
         DispatchQueue.main.async {
-            self.activityIndicator.startAnimating()
-            self.tableView.isHidden = true
+            
+            if !self.refreshControl.isRefreshing {
+                self.showLoader()
+                self.tableView.isHidden = true
+            }
         }
     }
     
     func hideLoading() {
         
-        DispatchQueue.main.async {
-            self.activityIndicator.stopAnimating()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.hideLoader()
             self.tableView.isHidden = false
+            self.endRefreshControl()
         }
     }
     
@@ -102,8 +112,19 @@ extension RealEstateViewController: RealEstateListViewProtocol {
     }
     
     func showError(_ error: Error) {
-        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Aceptar", style: .default))
-        present(alert, animated: true)
+        
+        DispatchQueue.main.async {
+            self.showAlert(title: "Error", message: error.localizedDescription)
+            self.endRefreshControl()
+        }
+    }
+    
+    private func endRefreshControl() {
+        
+        if self.refreshControl.isRefreshing {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                self.refreshControl.endRefreshing()
+            }
+        }
     }
 }

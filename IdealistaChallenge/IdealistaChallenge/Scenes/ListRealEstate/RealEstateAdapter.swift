@@ -29,6 +29,12 @@ class RealEstateAdapter: NSObject {
         tableView.dataSource = self
         
         self.tableView = tableView
+        
+        print("RealEstateAdapter")
+    }
+    
+    deinit {
+        print("deinit RealEstateAdapter")
     }
 }
 

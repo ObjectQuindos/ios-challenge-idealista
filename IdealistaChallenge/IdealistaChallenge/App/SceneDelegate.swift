@@ -10,6 +10,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
+    var tabBarCoordinator: TabBarCoordinator?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
@@ -18,8 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         guard let window = window else { return }
         
-        let coordinator = AppCoordinator(window: window, dicontainer: AppDependencyContainer())
-        coordinator.start()
+        tabBarCoordinator = TabBarCoordinator(window: window, dicontainer: AppDependencyContainer())
+        tabBarCoordinator?.start()
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

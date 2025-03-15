@@ -13,9 +13,9 @@ final class RealStateService: Service {
         self.client = client
     }
     
-    func listRealState() async throws -> [RealEstate] {
+    func listRealEState() async throws -> [RealEstate] {
         
-        let task = RealStateTask.list
+        let task = RealEStateTask.list
         
         do {
             dataResponse = try await client.requestDataResponse(task)
@@ -24,6 +24,21 @@ final class RealStateService: Service {
         
         do {
             return try decode([RealEstate].self, responseData: dataResponse)
+            
+        } catch { throw error }
+    }
+    
+    func detailRealEState() async throws -> RealEstateDetail {
+        
+        let task = RealEStateTask.detail
+        
+        do {
+            dataResponse = try await client.requestDataResponse(task)
+            
+        } catch { throw error }
+        
+        do {
+            return try decode(RealEstateDetail.self, responseData: dataResponse)
             
         } catch { throw error }
     }

@@ -5,6 +5,11 @@
 
 import Foundation
 
+struct PriceInfoDetail: Codable {
+    let amount: Double
+    let currencySuffix: String
+}
+
 struct Ubication: Codable {
     let latitude: Double
     let longitude: Double

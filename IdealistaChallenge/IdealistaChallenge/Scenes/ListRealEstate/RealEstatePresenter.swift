@@ -17,16 +17,21 @@ class RealEstateListPresenter {
     // MARK: - Properties
     
     private var realEstateDataSource: [RealEstate] = []
-    private let interactor: RealStateInteractor
+    private let interactor: RealEStateInteractor
     
     weak var delegate: RealEstateListViewProtocol?
     private weak var coordinator: Coordinator?
     
     // MARK: - Init
     
-    init(interactor: RealStateInteractor, coordinator: Coordinator) {
+    init(interactor: RealEStateInteractor, coordinator: Coordinator) {
         self.interactor = interactor
         self.coordinator = coordinator
+        print("RealEstateListPresenter")
+    }
+    
+    deinit {
+        print("deinit RealEstateListPresenter")
     }
     
     // MARK: - Public API (functions)
@@ -35,7 +40,7 @@ class RealEstateListPresenter {
         delegate?.showLoading()
         
         do {
-            let response = try await interactor.listRealState()
+            let response = try await interactor.listRealEState()
             self.realEstateDataSource = response
             
             delegate?.reloadData()
@@ -65,7 +70,7 @@ extension RealEstateListPresenter: RealEstateAdapterDelegate {
     }
     
     func didSelectedItem(at index: Int) {
-        let item = realEstateDataSource[index]
-        coordinator?.navigate(to: .propertyDetail(item))
+        //let item = realEstateDataSource[index]
+        coordinator?.navigate(to: .propertyDetailSwiftUI)
     }
 }

@@ -12,7 +12,7 @@ protocol RealEstateFactoryType {
 final class RealEstateFactory: RealEstateFactoryType {
     
     func makeModule(coordinator: Coordinator) -> RealEstateViewController {
-        let interactor = RealStateInteractor()
+        let interactor = RealEStateInteractor()
         let presenter = RealEstateListPresenter(interactor: interactor, coordinator: coordinator)
         
         return RealEstateViewController(presenter: presenter)

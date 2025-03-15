@@ -5,10 +5,10 @@
 
 import Foundation
 
-struct PropertyDetail: Codable {
+struct RealEstateDetail: Codable {
     let adid: Int
     let price: Double
-    let priceInfo: PriceInfo
+    let priceInfo: PriceInfoDetail
     let operation: String
     let propertyType: String
     let extendedPropertyType: String

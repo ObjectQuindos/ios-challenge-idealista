@@ -5,12 +5,12 @@
 
 import InfraLayerSDK
 
-enum RealStateTask {
+enum RealEStateTask {
     case list
     case detail
 }
 
-extension RealStateTask: APITask {
+extension RealEStateTask: APITask {
     
     var path: String {
         

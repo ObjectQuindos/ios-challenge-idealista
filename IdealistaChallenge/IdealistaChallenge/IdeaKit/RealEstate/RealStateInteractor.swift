@@ -5,7 +5,7 @@
 
 import Foundation
 
-final class RealStateInteractor {
+final class RealEStateInteractor {
     
     private let service: RealStateService
     
@@ -14,11 +14,11 @@ final class RealStateInteractor {
         self.service = initService
     }
     
-    func listRealState() async throws -> [RealEstate] {
-        try await service.listRealState()
+    func listRealEState() async throws -> [RealEstate] {
+        try await service.listRealEState()
     }
     
-    func detailRealState() async throws -> [RealEstate] {
-        try await service.listRealState()
+    func detailRealEstate() async throws -> RealEstateDetail {
+        try await service.detailRealEState()
     }
 }
