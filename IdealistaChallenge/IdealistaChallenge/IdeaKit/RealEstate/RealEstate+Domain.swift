@@ -25,20 +25,29 @@ extension RealEstate {
         return "\(Int(self.size)) m²"
     }
     
-    func formatRoomsAndBathrooms() -> String {
+    func getFloor() -> String {
+        var floorLocalized = "Planta "
+        floorLocalized.append(self.floor)
+        return floorLocalized
+    }
+    
+    func flatInfo() -> String {
         let roomsText = self.rooms == 1 ? "habitación" : "habitaciones"
         let bathroomsText = self.bathrooms == 1 ? "baño" : "baños"
         
-        return "\(self.rooms) \(roomsText) · \(self.bathrooms) \(bathroomsText)"
+        return "\(self.rooms) \(roomsText) · \(self.bathrooms) \(bathroomsText) · \(self.formatSize()) · \(self.getFloor())"
     }
     
     func getOperationLabel() -> String {
         
         switch self.operation {
+            
         case "sale":
             return "Venta"
+            
         case "rent":
             return "Alquiler"
+            
         default:
             return self.operation.capitalized
         }
@@ -46,5 +55,13 @@ extension RealEstate {
     
     func getAddress() -> String {
         return "\(self.address), \(self.neighborhood)"
+    }
+    
+    func fullAddress() -> String {
+        return "\(propertyType) en \(getAddress())"
+    }
+    
+    func getDistrict() -> String {
+        district + ", " + municipality
     }
 }

@@ -29,7 +29,7 @@ class FavoritesCoordinator: Coordinator {
     }
     
     func start() {
-        let favoritesViewController = UIViewController()
+        let favoritesViewController = dicontainer.favoritesFactory.makeModule(coordinator: self)
         favoritesViewController.title = "Favoritos"
         navigationController.viewControllers = [favoritesViewController]
     }

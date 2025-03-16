@@ -72,7 +72,7 @@ class TabBarCoordinator: Coordinator {
         )
         
         favoritesNavigationController.tabBarItem = UITabBarItem(
-            title: "Favoritos",
+            title: LocalizationKeys.favorites.localized,
             image: UIImage(systemName: "heart"),
             selectedImage: UIImage(systemName: "heart.fill")
         )

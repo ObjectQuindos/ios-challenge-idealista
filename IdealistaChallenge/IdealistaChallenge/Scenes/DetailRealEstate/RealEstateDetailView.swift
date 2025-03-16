@@ -34,7 +34,6 @@ struct RealEstateDetailView: View {
             }
             .padding(.bottom, 20)
         }
-        .navigationTitle("Detalle de la propiedad")
         .background(Color(red: 0.95, green: 0.95, blue: 0.95))
         .task {
             if viewModel.realEstateDetail == nil {

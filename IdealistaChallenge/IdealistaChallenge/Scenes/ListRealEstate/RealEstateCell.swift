@@ -7,19 +7,21 @@ import UIKit
 
 protocol RealEstateTableViewCellInterface {
     func configureTexts(realEstate: RealEstate)
+    func configureFavoriteButton(isFavorite: Bool)
+    func setFavoriteAction(_ action: @escaping () -> Void)
 }
 
 class RealEstateTableViewCell: UITableViewCell {
     
     // MARK: - Identifier
     
-    static let identifier = "RealEstateTableViewCell"
+    static let identifier = Identifiers.realEstateTableViewCellIdentifier
     
     // MARK: - UI Elements
     
     private let containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = .cardBackgroundColor
         view.layer.cornerRadius = 12
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.1
@@ -34,6 +36,7 @@ class RealEstateTableViewCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
+        imageView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -49,43 +52,67 @@ class RealEstateTableViewCell: UITableViewCell {
         return label
     }()
     
+    private let propertyTypeAddressLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.textColor = .darkTextColor
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let districtMunicipalityLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .mediumTextColor
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let priceLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        label.textColor = .black
+        label.textColor = .darkTextColor
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let addressLabel: UILabel = {
+    private let roomsSizeFloorLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .darkGray
+        label.textColor = .mediumTextColor
+        label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let sizeLabel: UILabel = {
+    private let featuresLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .darkGray
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.textColor = .mediumTextColor
+        label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let roomsLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .darkGray
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private let favoriteButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "heart"), for: .normal)
+        button.tintColor = .systemRed
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
+    
+    private var favoriteAction: (() -> Void)?
     
     // MARK: - Initialization
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         setupUI()
+        setupActions()
     }
     
     required init?(coder: NSCoder) {
@@ -97,16 +124,19 @@ class RealEstateTableViewCell: UITableViewCell {
         
         propertyImageView.image = nil
         operationLabel.text = nil
+        propertyTypeAddressLabel.text = nil
+        districtMunicipalityLabel.text = nil
         priceLabel.text = nil
-        addressLabel.text = nil
-        sizeLabel.text = nil
-        roomsLabel.text = nil
+        roomsSizeFloorLabel.text = nil
+        featuresLabel.text = nil
     }
     
     // MARK: - Setup
     
+    private var featuresBottomConstraint: NSLayoutConstraint!
+    private var roomsBottomConstraint: NSLayoutConstraint!
+    
     private func setupUI() {
-        
         backgroundColor = .clear
         selectionStyle = .none
         
@@ -114,10 +144,16 @@ class RealEstateTableViewCell: UITableViewCell {
         
         containerView.addSubview(propertyImageView)
         containerView.addSubview(operationLabel)
+        containerView.addSubview(propertyTypeAddressLabel)
+        containerView.addSubview(districtMunicipalityLabel)
         containerView.addSubview(priceLabel)
-        containerView.addSubview(addressLabel)
-        containerView.addSubview(sizeLabel)
-        containerView.addSubview(roomsLabel)
+        containerView.addSubview(roomsSizeFloorLabel)
+        containerView.addSubview(featuresLabel)
+        containerView.addSubview(favoriteButton)
+        
+        // Active or no active as content
+        featuresBottomConstraint = featuresLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -12)
+        roomsBottomConstraint = roomsSizeFloorLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -12)
         
         NSLayoutConstraint.activate([
             
@@ -128,29 +164,51 @@ class RealEstateTableViewCell: UITableViewCell {
             
             propertyImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
             propertyImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
-            propertyImageView.heightAnchor.constraint(equalToConstant: 120),
-            propertyImageView.widthAnchor.constraint(equalToConstant: 160),
+            propertyImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
+            propertyImageView.heightAnchor.constraint(equalToConstant: 180),
             
             operationLabel.topAnchor.constraint(equalTo: propertyImageView.topAnchor, constant: 8),
             operationLabel.leadingAnchor.constraint(equalTo: propertyImageView.leadingAnchor, constant: 8),
             operationLabel.heightAnchor.constraint(equalToConstant: 24),
             
-            priceLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
-            priceLabel.leadingAnchor.constraint(equalTo: propertyImageView.trailingAnchor, constant: 16),
+            propertyTypeAddressLabel.topAnchor.constraint(equalTo: propertyImageView.bottomAnchor, constant: 12),
+            propertyTypeAddressLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
+            propertyTypeAddressLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
+            
+            districtMunicipalityLabel.topAnchor.constraint(equalTo: propertyTypeAddressLabel.bottomAnchor, constant: 6),
+            districtMunicipalityLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
+            districtMunicipalityLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
+            
+            priceLabel.topAnchor.constraint(equalTo: districtMunicipalityLabel.bottomAnchor, constant: 8),
+            priceLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
             priceLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
             
-            addressLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 8),
-            addressLabel.leadingAnchor.constraint(equalTo: propertyImageView.trailingAnchor, constant: 16),
-            addressLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
+            roomsSizeFloorLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 8),
+            roomsSizeFloorLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
+            roomsSizeFloorLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
             
-            sizeLabel.topAnchor.constraint(equalTo: addressLabel.bottomAnchor, constant: 8),
-            sizeLabel.leadingAnchor.constraint(equalTo: propertyImageView.trailingAnchor, constant: 16),
-            sizeLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
+            featuresLabel.topAnchor.constraint(equalTo: roomsSizeFloorLabel.bottomAnchor, constant: 8),
+            featuresLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
+            featuresLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
             
-            roomsLabel.topAnchor.constraint(equalTo: sizeLabel.bottomAnchor, constant: 8),
-            roomsLabel.leadingAnchor.constraint(equalTo: propertyImageView.trailingAnchor, constant: 16),
-            roomsLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
+            // Por defecto activamos featuresBottomConstraint (se ajustará en configureTexts)
+            featuresBottomConstraint
         ])
+        
+        NSLayoutConstraint.activate([
+            favoriteButton.topAnchor.constraint(equalTo: propertyImageView.topAnchor, constant: 8),
+            favoriteButton.trailingAnchor.constraint(equalTo: propertyImageView.trailingAnchor, constant: -8),
+            favoriteButton.widthAnchor.constraint(equalToConstant: 44),
+            favoriteButton.heightAnchor.constraint(equalToConstant: 44)
+        ])
+    }
+    
+    private func setupActions() {
+        favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func favoriteButtonTapped() {
+        favoriteAction?()
     }
 }
 
@@ -159,42 +217,24 @@ extension RealEstateTableViewCell: RealEstateTableViewCellInterface {
     func configureTexts(realEstate: RealEstate) {
         
         operationLabel.text = realEstate.getOperationLabel()
-        operationLabel.backgroundColor = getOperationColor(realEstate)
-        priceLabel.text = realEstate.formatPrice()
-        addressLabel.text = realEstate.getAddress()
-        sizeLabel.text = realEstate.formatSize()
-        roomsLabel.text = realEstate.formatRoomsAndBathrooms()
-    }
-    
-    private func getOperationColor(_ realEstate: RealEstate) -> UIColor {
+        operationLabel.backgroundColor = realEstate.getOperationColor()
         
-        switch realEstate.operation {
-            
-        case "sale":
-            return UIColor(red: 0.2, green: 0.6, blue: 0.9, alpha: 1.0) // Blue
-            
-        case "rent":
-            return UIColor(red: 0.2, green: 0.7, blue: 0.3, alpha: 1.0) // Green
-            
-        default:
-            return .gray
-        }
-    }
-}
-
-// MARK: - Padded Label
-
-class PaddedLabel: UILabel {
-    
-    private var padding = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
-    
-    override func drawText(in rect: CGRect) {
-        super.drawText(in: rect.inset(by: padding))
+        propertyTypeAddressLabel.text = realEstate.fullAddress().capitalized
+        districtMunicipalityLabel.text = realEstate.getDistrict()
+        priceLabel.text = realEstate.formatPrice()
+        roomsSizeFloorLabel.text = realEstate.flatInfo()
+        
+        featuresLabel.text = "Features"
+        
+        configureFavoriteButton(isFavorite: realEstate.isFavorite ?? false)
     }
     
-    override var intrinsicContentSize: CGSize {
-        let size = super.intrinsicContentSize
-        return CGSize(width: size.width + padding.left + padding.right,
-                      height: size.height + padding.top + padding.bottom)
+    func configureFavoriteButton(isFavorite: Bool) {
+        let imageName = isFavorite ? "heart.fill" : "heart"
+        favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
+    }
+    
+    func setFavoriteAction(_ action: @escaping () -> Void) {
+        self.favoriteAction = action
     }
 }

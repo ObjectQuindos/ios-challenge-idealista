@@ -16,6 +16,12 @@ class BaseViewController: UIViewController {
         return indicator
     }()
     
+    private var emptyStateView: EmptyStateView = {
+        let emptyView = EmptyStateView.createDefaultEmptyState()
+        emptyView.isHidden = true
+        return emptyView
+    }()
+    
     // MARK: - Lifecycle Methods
     
     override func viewDidLoad() {
@@ -23,6 +29,7 @@ class BaseViewController: UIViewController {
         
         view.backgroundColor = .white
         setupLoader()
+        setupEmptyView()
     }
     
     private func setupLoader() {
@@ -46,16 +53,39 @@ class BaseViewController: UIViewController {
         ])
     }
     
+    private func setupEmptyView() {
+        
+        view.addSubview(emptyStateView)
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            emptyStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyStateView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            emptyStateView.heightAnchor.constraint(equalToConstant: 200)
+        ])
+    }
+    
     func showLoader() {
         loaderView.isHidden = false
         activityIndicator.startAnimating()
+        activityIndicator.isHidden = false
         view.isUserInteractionEnabled = false
     }
     
     func hideLoader() {
         loaderView.isHidden = true
         activityIndicator.stopAnimating()
+        activityIndicator.isHidden = true
         view.isUserInteractionEnabled = true
+    }
+    
+    func showEmptyStateView() {
+        emptyStateView.isHidden = false
+    }
+    
+    func hideEmptyStateView() {
+        emptyStateView.isHidden = true
     }
     
     func showAlert(title: String, message: String, okAction: (() -> Void)? = nil) {
@@ -67,5 +97,9 @@ class BaseViewController: UIViewController {
         
         alertController.addAction(okAction)
         present(alertController, animated: true)
+    }
+    
+    func updateEmptyState(image: UIImage? = nil, title: String, subtitle: String? = nil) {
+        emptyStateView.update(image: image, title: title, message: subtitle)
     }
 }

@@ -15,10 +15,10 @@ struct PriceDetails: Codable {
 }
 
 struct Multimedia: Codable {
-    let images: [Image]
+    let images: [ImageData]
 }
 
-struct Image: Codable, Identifiable {
+struct ImageData: Codable, Identifiable {
     
     let url: String
     let tag: String
@@ -34,6 +34,11 @@ struct Image: Codable, Identifiable {
 struct ParkingSpace: Codable {
     let hasParkingSpace: Bool
     let isParkingSpaceIncludedInPrice: Bool
+    
+    init(hasParkingSpace: Bool = false, isParkingSpaceIncludedInPrice: Bool = false) {
+        self.hasParkingSpace = hasParkingSpace
+        self.isParkingSpaceIncludedInPrice = isParkingSpaceIncludedInPrice
+    }
 }
 
 struct Features: Codable {
@@ -43,6 +48,14 @@ struct Features: Codable {
     private let has_swimming_pool: Bool?
     private let has_terrace: Bool?
     private let has_garden: Bool?
+    
+    init(has_air_conditioning: Bool? = false, has_box_room: Bool? = false, has_swimming_pool: Bool? = false, has_terrace: Bool? = false, has_garden: Bool? = false) {
+        self.has_air_conditioning = has_air_conditioning
+        self.has_box_room = has_box_room
+        self.has_swimming_pool = has_swimming_pool
+        self.has_terrace = has_terrace
+        self.has_garden = has_garden
+    }
     
     enum CodingKeys: String, CodingKey {
         case has_air_conditioning = "hasAirConditioning"

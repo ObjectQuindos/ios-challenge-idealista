@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="24D70" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="FeaturesEntity" representedClassName="FeaturesEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="hasAirConditioning" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="hasBoxRoom" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="hasGarden" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="hasSwimmingPool" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="hasTerrace" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="realEstate" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RealEstateEntity" inverseName="features" inverseEntity="RealEstateEntity"/>
+    </entity>
+    <entity name="ImageDataEntity" representedClassName="ImageDataEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="localizedName" optional="YES" attributeType="String"/>
+        <attribute name="multimediaId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="tag" optional="YES" attributeType="String"/>
+        <attribute name="url" attributeType="String"/>
+        <relationship name="multimedia" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MultimediaEntity" inverseName="images" inverseEntity="MultimediaEntity"/>
+    </entity>
+    <entity name="MultimediaEntity" representedClassName="MultimediaEntity" syncable="YES" codeGenerationType="class">
+        <relationship name="images" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ImageDataEntity" inverseName="multimedia" inverseEntity="ImageDataEntity"/>
+        <relationship name="realEstate" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RealEstateEntity" inverseName="multimedia" inverseEntity="RealEstateEntity"/>
+    </entity>
+    <entity name="ParkingSpaceEntity" representedClassName="ParkingSpaceEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="hasParkingSpace" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isParkingSpaceIncludedInPrice" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="realEstate" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RealEstateEntity" inverseName="parkingSpace" inverseEntity="RealEstateEntity"/>
+    </entity>
+    <entity name="PriceDetailsEntity" representedClassName="PriceDetailsEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="amount" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="currencySuffix" optional="YES" attributeType="String"/>
+        <relationship name="priceInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PriceInfoEntity" inverseName="price" inverseEntity="PriceInfoEntity"/>
+    </entity>
+    <entity name="PriceInfoEntity" representedClassName="PriceInfoEntity" syncable="YES" codeGenerationType="class">
+        <relationship name="price" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="PriceDetailsEntity" inverseName="priceInfo" inverseEntity="PriceDetailsEntity"/>
+        <relationship name="realEstate" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RealEstateEntity" inverseName="priceInfo" inverseEntity="RealEstateEntity"/>
+    </entity>
+    <entity name="RealEstateEntity" representedClassName="RealEstateEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="address" optional="YES" attributeType="String"/>
+        <attribute name="bathrooms" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="country" optional="YES" attributeType="String"/>
+        <attribute name="descriptionText" optional="YES" attributeType="String"/>
+        <attribute name="district" optional="YES" attributeType="String"/>
+        <attribute name="exterior" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="floor" optional="YES" attributeType="String"/>
+        <attribute name="isFavorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="municipality" optional="YES" attributeType="String"/>
+        <attribute name="neighborhood" optional="YES" attributeType="String"/>
+        <attribute name="operation" optional="YES" attributeType="String"/>
+        <attribute name="price" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="propertyCode" attributeType="String"/>
+        <attribute name="propertyType" optional="YES" attributeType="String"/>
+        <attribute name="province" optional="YES" attributeType="String"/>
+        <attribute name="rooms" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="size" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="thumbnail" optional="YES" attributeType="String"/>
+        <relationship name="features" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FeaturesEntity" inverseName="realEstate" inverseEntity="FeaturesEntity"/>
+        <relationship name="multimedia" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="MultimediaEntity" inverseName="realEstate" inverseEntity="MultimediaEntity"/>
+        <relationship name="parkingSpace" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ParkingSpaceEntity" inverseName="realEstate" inverseEntity="ParkingSpaceEntity"/>
+        <relationship name="priceInfo" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="PriceInfoEntity" inverseName="realEstate" inverseEntity="PriceInfoEntity"/>
+    </entity>
+</model>

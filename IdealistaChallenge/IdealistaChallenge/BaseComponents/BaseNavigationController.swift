@@ -21,7 +21,7 @@ final class BaseNavigationController: UINavigationController {
         
         let coloredAppearance = UINavigationBarAppearance()
         coloredAppearance.configureWithOpaqueBackground()
-        coloredAppearance.backgroundColor = .white
+        coloredAppearance.backgroundColor = .primaryColor
         coloredAppearance.shadowColor = nil
         navigationItem.largeTitleDisplayMode = .automatic
         navigationItem.hidesSearchBarWhenScrolling = false

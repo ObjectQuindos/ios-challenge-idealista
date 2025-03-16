@@ -31,6 +31,8 @@ struct RealEstate: Codable, Identifiable {
     let features: Features
     let parkingSpace: ParkingSpace?
     
+    var isFavorite: Bool? = false
+    
     var id: String {
         return propertyCode
     }

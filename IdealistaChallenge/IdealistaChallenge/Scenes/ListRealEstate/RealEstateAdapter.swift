@@ -14,27 +14,26 @@ protocol RealEstateAdapterDelegate: AnyObject {
 
 class RealEstateAdapter: NSObject {
     
+    private let estimatedHeight: CGFloat = 200
+    
     private weak var tableView: UITableView?
     weak var delegate: RealEstateAdapterDelegate?
     
     func configure(tableView: UITableView) {
         
-        tableView.backgroundColor = .clear
+        tableView.backgroundColor = .primarySoftColor
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = estimatedHeight
         
         tableView.register(RealEstateTableViewCell.self, forCellReuseIdentifier: RealEstateTableViewCell.identifier)
         tableView.delegate = self
         tableView.dataSource = self
         
         self.tableView = tableView
-        
-        print("RealEstateAdapter")
-    }
-    
-    deinit {
-        print("deinit RealEstateAdapter")
     }
 }
 
@@ -66,7 +65,11 @@ extension RealEstateAdapter: UITableViewDataSource {
 extension RealEstateAdapter: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return estimatedHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

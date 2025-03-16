@@ -1,11 +1,11 @@
 //
-//  ViewController.swift
+//  FavoritesViewController.swift
 //  IdealistaChallenge
 //
 
 import UIKit
 
-class RealEstateViewController: BaseViewController {
+class FavoritesViewController: BaseViewController {
     
     // MARK: - UI Elements
     
@@ -14,18 +14,12 @@ class RealEstateViewController: BaseViewController {
         return tableView
     }()
     
-    private let refreshControl: UIRefreshControl = {
-        let refreshControl = UIRefreshControl()
-        refreshControl.tintColor = .darkGray
-        return refreshControl
-    }()
-    
-    private let presenter: RealEstateListPresenter
+    private let presenter: FavoritesPresenter
     private let adapter: RealEstateAdapter
     
     // MARK: - Inits
     
-    init(presenter: RealEstateListPresenter) {
+    init(presenter: FavoritesPresenter) {
         self.presenter = presenter
         self.adapter = RealEstateAdapter()
         
@@ -46,17 +40,18 @@ class RealEstateViewController: BaseViewController {
         super.viewDidLoad()
         
         setupUI()
-        configureRefreshControl()
-        
-        Task {
-            await presenter.loadRealEstates()
-        }
+        updateEmptyState(image: UIImage(systemName: "heart.slash"), title: "No hay favoritos", subtitle: "Busca propiedades y añádelas como favoritas para más fácil acceso.")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.loadFavorites()
     }
     
     private func setupUI() {
         
-        title = "Propiedades"
-        view.backgroundColor = .primarySoftColor
+        title = LocalizationKeys.favorites.localized
+        view.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
@@ -66,65 +61,41 @@ class RealEstateViewController: BaseViewController {
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
     }
-    
-    private func configureRefreshControl() {
-        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
-        tableView.refreshControl = refreshControl
-    }
-    
-    @objc private func refreshData() {
-        
-        Task {
-            await presenter.loadRealEstates()
-        }
-    }
 }
 
-// MARK: - PropertyListViewProtocol
+// MARK: - FavoritesViewProtocol
 
-extension RealEstateViewController: RealEstateListViewProtocol {
+extension FavoritesViewController: FavoritesViewProtocol {
     
     func showLoading() {
-        
         DispatchQueue.main.async {
-            
-            if !self.refreshControl.isRefreshing {
-                self.showLoader()
-                self.tableView.isHidden = true
-            }
+            self.showLoader()
+            self.tableView.isHidden = true
         }
     }
     
     func hideLoading() {
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.async {
             self.hideLoader()
-            self.tableView.isHidden = false
-            self.endRefreshControl()
+            self.updateEmptyState()
         }
     }
     
     func reloadData() {
-        
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
     
-    func showError(_ error: Error) {
-        
-        DispatchQueue.main.async {
-            self.showAlert(title: "Error", message: error.localizedDescription)
-            self.endRefreshControl()
-        }
+    private func updateEmptyState() {
+        let isEmpty = presenter.numberOfRows() == 0
+        tableView.isHidden = isEmpty
+        isEmpty == true ? showEmptyStateView() : hideEmptyStateView()
     }
     
-    private func endRefreshControl() {
-        
-        if self.refreshControl.isRefreshing {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                self.refreshControl.endRefreshing()
-            }
+    func showError(_ error: Error) {
+        DispatchQueue.main.async {
+            self.showAlert(title: "Error", message: error.localizedDescription)
         }
     }
 }

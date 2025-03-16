@@ -47,7 +47,6 @@ class ListCoordinator: Coordinator {
             navigationController.pushViewController(view, animated: true)
             
         case .propertyDetailSwiftUI:
-            print("sssssss")
             let detailView = dicontainer.realEstateDetailFactory.makeModule(coordinator: self)
             let hostingController = UIHostingController(rootView: detailView)
             navigationController.pushViewController(hostingController, animated: true)
