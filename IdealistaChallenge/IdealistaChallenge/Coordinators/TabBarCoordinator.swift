@@ -30,8 +30,13 @@ class TabBarCoordinator: Coordinator {
     private var listCoordinator: ListCoordinator?
     private var favoritesCoordinator: FavoritesCoordinator?
     
-    init(window: UIWindow, dicontainer: AppDependencyContainer) {
-        self.window = window
+    private let uiUserInterfaceIdiom: UIUserInterfaceIdiom
+    
+    init(windowScene: UIWindowScene, dicontainer: AppDependencyContainer) {
+        
+        self.window = UIWindow(windowScene: windowScene)
+        self.uiUserInterfaceIdiom = windowScene.traitCollection.userInterfaceIdiom
+        
         self.tabBarController = UITabBarController()
         self.dicontainer = dicontainer
         
@@ -53,14 +58,18 @@ class TabBarCoordinator: Coordinator {
         tabBarController.tabBar.standardAppearance = appearance
         tabBarController.tabBar.scrollEdgeAppearance = appearance
     }
+
+    private func setupIPadInterface() {
+        // Configuración específica para iPad usando un SplitViewController
+    }
     
     func start() {
         
         let listNavigationController = BaseNavigationController()
         let favoritesNavigationController = BaseNavigationController()
         
-        listCoordinator = ListCoordinator(navigationController: listNavigationController, dicontainer: dicontainer)
-        favoritesCoordinator = FavoritesCoordinator(navigationController: favoritesNavigationController, dicontainer: dicontainer)
+        listCoordinator = ListCoordinator(navigationController: listNavigationController, dicontainer: dicontainer, idiom: uiUserInterfaceIdiom)
+        favoritesCoordinator = FavoritesCoordinator(navigationController: favoritesNavigationController, dicontainer: dicontainer, idiom: uiUserInterfaceIdiom)
         
         listCoordinator?.start()
         favoritesCoordinator?.start()

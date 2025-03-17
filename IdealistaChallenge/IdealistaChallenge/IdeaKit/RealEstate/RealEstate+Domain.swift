@@ -15,8 +15,16 @@ extension RealEstate {
         )
     }
     
+    func formatSaveDate() -> String? {
+        self.createdAt?.formatSavedDate()
+    }
+    
     func formatSize() -> String {
         return PropertyFormatters.sizeFormat(size: self.size)
+    }
+    
+    func formatRoomsBathrooms() -> String {
+        PropertyFormatters.flatInfoDescrition(rooms: self.rooms, bathrooms: self.bathrooms)
     }
     
     func getFloor() -> String {
@@ -25,10 +33,10 @@ extension RealEstate {
     
     func flatInfo() -> String {
         
-        let roomsText = self.rooms == 1 ? LocalizationKeys.room.localized : LocalizationKeys.rooms.localized
-        let bathroomsText = self.bathrooms == 1 ? LocalizationKeys.bathroom.localized : LocalizationKeys.bathrooms.localized
+        //let roomsText = self.rooms == 1 ? LocalizationKeys.room.localized : LocalizationKeys.rooms.localized
+        //let bathroomsText = self.bathrooms == 1 ? LocalizationKeys.bathroom.localized : LocalizationKeys.bathrooms.localized
         
-        return "\(self.rooms) \(roomsText) · \(self.bathrooms) \(bathroomsText) · \(self.formatSize()) · \(self.getFloor())"
+        return "\(self.formatRoomsBathrooms()) · \(self.formatSize()) · \(self.getFloor())"
     }
     
     func getOperationLabel() -> String {

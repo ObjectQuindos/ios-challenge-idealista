@@ -23,32 +23,29 @@ extension RealEstateDetail {
         return PropertyFormatters.sizeFormat(size: Double(moreCharacteristics.constructedArea))
     }
     
+    func formatRoomsBathrooms() -> String {
+        let rooms = moreCharacteristics.roomNumber
+        let baths = moreCharacteristics.bathNumber
+        
+        return PropertyFormatters.flatInfoDescrition(rooms: rooms, bathrooms: baths)
+    }
+    
     func getFloorText() -> String {
         return PropertyFormatters.floorDescription(floor: moreCharacteristics.floor, localized: true)
     }
     
-    func formatRoomsAndBathrooms() -> String {
-        
-        let rooms = moreCharacteristics.roomNumber
-        let baths = moreCharacteristics.bathNumber
-        
-        let roomsText = rooms == 1 ? "1 \(LocalizationKeys.room.localized)" : "\(rooms) \(LocalizationKeys.rooms.localized)"
-        let bathsText = baths == 1 ? "1 \(LocalizationKeys.bathroom.localized)" : "\(baths) \(LocalizationKeys.bathrooms.localized)"
-        
-        return "\(roomsText), \(bathsText)"
-    }
-    
     func formatRooms() -> String {
-        
-        let rooms = moreCharacteristics.roomNumber
-        let roomsText = rooms == 1 ? "1 \(LocalizationKeys.room.localized)" : "\(rooms) \(LocalizationKeys.rooms.localized)"
-        return roomsText
+        PropertyFormatters.format(rooms: moreCharacteristics.roomNumber)
+        //let rooms = moreCharacteristics.roomNumber
+        //let roomsText = rooms == 1 ? "1 \(LocalizationKeys.room.localized)" : "\(rooms) \(LocalizationKeys.rooms.localized)"
+        //return roomsText
     }
     
     func formatBathrooms() -> String {
-        let baths = moreCharacteristics.bathNumber
-        let bathsText = baths == 1 ? "1 \(LocalizationKeys.bathroom.localized)" : "\(baths) \(LocalizationKeys.bathrooms.localized)"
-        return bathsText
+        PropertyFormatters.format(bathrooms: moreCharacteristics.bathNumber)
+        //let baths = moreCharacteristics.bathNumber
+        //let bathsText = baths == 1 ? "1 \(LocalizationKeys.bathroom.localized)" : "\(baths) \(LocalizationKeys.bathrooms.localized)"
+        //return bathsText
     }
     
     func getExtras() -> [String] {

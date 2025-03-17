@@ -12,13 +12,13 @@ class ListCoordinator: Coordinator {
     
     private let navigationController: BaseNavigationController
     private let dicontainer: AppDependencyContainer
+    private let uiUserInterfaceIdiom: UIUserInterfaceIdiom
     
-    init(navigationController: BaseNavigationController, dicontainer: AppDependencyContainer) {
+    init(navigationController: BaseNavigationController, dicontainer: AppDependencyContainer, idiom: UIUserInterfaceIdiom) {
         
         self.navigationController = navigationController
         self.dicontainer = dicontainer
-        
-        //setupNavigationController()
+        self.uiUserInterfaceIdiom = idiom
     }
     
     private func setupNavigationController() {

@@ -37,6 +37,7 @@
         <attribute name="address" optional="YES" attributeType="String"/>
         <attribute name="bathrooms" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="country" optional="YES" attributeType="String"/>
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="descriptionText" optional="YES" attributeType="String"/>
         <attribute name="district" optional="YES" attributeType="String"/>
         <attribute name="exterior" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>

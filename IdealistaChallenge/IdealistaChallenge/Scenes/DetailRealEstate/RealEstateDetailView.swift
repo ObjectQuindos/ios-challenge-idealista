@@ -37,6 +37,13 @@ private struct RealEstateContentView: View {
         VStack(spacing: 16) {
             
             if let details = viewModel.realEstateDetail {
+                let imageUrls = details.multimedia.images.map { $0.url }
+                
+                AsyncImageCarousel(imageUrls: imageUrls)
+                    .padding(.top, 16)
+            }
+            
+            if let details = viewModel.realEstateDetail {
                 OverviewCard(title: LocalizationKeys.description.localized, description: details.propertyComment)
             }
             

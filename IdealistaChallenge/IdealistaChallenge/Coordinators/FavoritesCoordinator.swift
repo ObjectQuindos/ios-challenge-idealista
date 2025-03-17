@@ -10,12 +10,13 @@ class FavoritesCoordinator: Coordinator {
     
     private let navigationController: BaseNavigationController
     private let dicontainer: AppDependencyContainer
+    private let uiUserInterfaceIdiom: UIUserInterfaceIdiom
     
-    init(navigationController: BaseNavigationController, dicontainer: AppDependencyContainer) {
+    init(navigationController: BaseNavigationController, dicontainer: AppDependencyContainer, idiom: UIUserInterfaceIdiom) {
+        
         self.navigationController = navigationController
         self.dicontainer = dicontainer
-        
-        //setupNavigationController()
+        self.uiUserInterfaceIdiom = idiom
     }
     
     private func setupNavigationController() {
@@ -29,13 +30,27 @@ class FavoritesCoordinator: Coordinator {
     }
     
     func start() {
-        let favoritesViewController = dicontainer.favoritesFactory.makeModule(coordinator: self, imageManager: dicontainer.imageManager)
-        favoritesViewController.title = LocalizationKeys.favorites.localized
-        navigationController.viewControllers = [favoritesViewController]
+        
+        if uiUserInterfaceIdiom == .pad {
+            setupIPadInterface()
+            
+        } else {
+            setupIPhoneInterface()
+        }
     }
     
     func navigate(to route: NavigationRoute) {
         navigationRealEstateModule(route: route)
+    }
+    
+    private func setupIPadInterface() {
+        // For example: SplitViewController
+    }
+    
+    private func setupIPhoneInterface() {
+        let favoritesViewController = dicontainer.favoritesFactory.makeModule(coordinator: self, imageManager: dicontainer.imageManager)
+        favoritesViewController.title = LocalizationKeys.favorites.localized
+        navigationController.viewControllers = [favoritesViewController]
     }
 }
 

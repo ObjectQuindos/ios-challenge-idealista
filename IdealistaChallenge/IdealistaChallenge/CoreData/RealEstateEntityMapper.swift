@@ -49,6 +49,7 @@ class RealEstateEntityMapper {
             multimedia: multimedia,
             features: features,
             parkingSpace: parkingSpace,
+            createdAt: entity.createdAt,
             isFavorite: entity.isFavorite
         )
     }
@@ -66,6 +67,7 @@ class RealEstateEntityMapper {
                 
             } else {
                 entity = RealEstateEntity(context: context)
+                entity.createdAt = Date()
             }
             
         } catch {

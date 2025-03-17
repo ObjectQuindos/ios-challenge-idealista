@@ -97,6 +97,15 @@ class RealEstateTableViewCell: UITableViewCell {
         return label
     }()
     
+    private let savedDateLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 11)
+        label.textColor = .mediumTextColor
+        label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let favoriteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "heart"), for: .normal)
@@ -130,6 +139,7 @@ class RealEstateTableViewCell: UITableViewCell {
         priceLabel.text = nil
         roomsSizeFloorLabel.text = nil
         featuresLabel.text = nil
+        savedDateLabel.text = nil
     }
     
     // MARK: - Setup
@@ -150,6 +160,7 @@ class RealEstateTableViewCell: UITableViewCell {
         containerView.addSubview(priceLabel)
         containerView.addSubview(roomsSizeFloorLabel)
         containerView.addSubview(featuresLabel)
+        containerView.addSubview(savedDateLabel)
         containerView.addSubview(favoriteButton)
         
         // Active or no active as content
@@ -172,7 +183,11 @@ class RealEstateTableViewCell: UITableViewCell {
             operationLabel.leadingAnchor.constraint(equalTo: realEstateImageView.leadingAnchor, constant: 8),
             operationLabel.heightAnchor.constraint(equalToConstant: 24),
             
-            propertyTypeAddressLabel.topAnchor.constraint(equalTo: realEstateImageView.bottomAnchor, constant: 12),
+            savedDateLabel.topAnchor.constraint(equalTo: realEstateImageView.bottomAnchor, constant: 4),
+            savedDateLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
+            savedDateLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
+            
+            propertyTypeAddressLabel.topAnchor.constraint(equalTo: savedDateLabel.bottomAnchor, constant: 12),
             propertyTypeAddressLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
             propertyTypeAddressLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
             
@@ -220,6 +235,7 @@ extension RealEstateTableViewCell: RealEstateTableViewCellInterface {
         operationLabel.text = realEstate.getOperationLabel()
         operationLabel.backgroundColor = realEstate.getOperationColor()
         
+        savedDateLabel.text = realEstate.formatSaveDate()
         propertyTypeAddressLabel.text = realEstate.fullAddress()
         districtMunicipalityLabel.text = realEstate.getDistrict()
         priceLabel.text = realEstate.formatPrice()

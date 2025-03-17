@@ -32,6 +32,23 @@ class BaseViewController: UIViewController {
         setupEmptyView()
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        // iPad suport
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        // iPad suport
+    }
+    
+    private func setupBasedOnDeviceIdiom() {
+        
+        if traitCollection.userInterfaceIdiom == .pad {
+            // settings iPad
+        }
+    }
+    
     private func setupLoader() {
         
         view.addSubview(loaderView)
