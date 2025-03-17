@@ -34,7 +34,7 @@ class RealEstateBasePresenter: RealEstateAdapterDelegate {
         
         configureImage(for: item, in: cell)
         
-        // La configuración del botón de favoritos debe ser implementada por cada subclase
+        // configuration implemented by subclass
         configureFavoriteAction(for: item, in: cell)
     }
     
@@ -45,10 +45,19 @@ class RealEstateBasePresenter: RealEstateAdapterDelegate {
             if let cachedImage = imageManager.getCachedImage(for: firstImageUrl) {
                 cell.setImage(cachedImage)
                 
+                // Remaining images and save in cache
+                if item.multimedia.images.count > 1 {
+                    downloadRemainingImages(for: item)
+                }
             } else {
                 cell.setImage(UIImage(systemName: "photo"))
-                imageManager.downloadImage(from: firstImageUrl) { image in
-                    cell.setImage(image)
+                
+                // Download all images
+                imageManager.downloadAllImages(from: item) { images in
+                    
+                    if let firstImage = images[firstImageUrl] {
+                        cell.setImage(firstImage)
+                    }
                 }
             }
             
@@ -63,5 +72,18 @@ class RealEstateBasePresenter: RealEstateAdapterDelegate {
     
     func findIndex(for propertyCode: String, in dataSource: [RealEstate]) -> Int? {
         return dataSource.firstIndex(where: { $0.propertyCode == propertyCode })
+    }
+    
+    private func downloadRemainingImages(for item: RealEstate) {
+        
+        // Do not need the first one already downloaded
+        let remainingUrls = Array(item.multimedia.images.dropFirst()).map { $0.url }
+        
+        for urlString in remainingUrls {
+            
+            if imageManager.getCachedImage(for: urlString) == nil {
+                imageManager.downloadImage(from: urlString) { _ in }
+            }
+        }
     }
 }
