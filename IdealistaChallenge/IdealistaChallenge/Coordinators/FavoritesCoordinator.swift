@@ -29,8 +29,8 @@ class FavoritesCoordinator: Coordinator {
     }
     
     func start() {
-        let favoritesViewController = dicontainer.favoritesFactory.makeModule(coordinator: self)
-        favoritesViewController.title = "Favoritos"
+        let favoritesViewController = dicontainer.favoritesFactory.makeModule(coordinator: self, imageManager: dicontainer.imageManager)
+        favoritesViewController.title = LocalizationKeys.favorites.localized
         navigationController.viewControllers = [favoritesViewController]
     }
     
@@ -50,7 +50,7 @@ extension FavoritesCoordinator {
             navigationController.pushViewController(view, animated: true)
             
         case .propertyDetailSwiftUI:
-            let detailView = dicontainer.realEstateDetailFactory.makeModule(coordinator: self)
+            let detailView = dicontainer.realEstateDetailFactory.makeModule(coordinator: self, imageManager: dicontainer.imageManager)
             let hostingController = UIHostingController(rootView: detailView)
             navigationController.pushViewController(hostingController, animated: true)
         }

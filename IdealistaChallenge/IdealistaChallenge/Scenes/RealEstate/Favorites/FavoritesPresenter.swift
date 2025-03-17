@@ -12,7 +12,7 @@ protocol FavoritesViewProtocol: AnyObject {
     func showError(_ error: Error)
 }
 
-class FavoritesPresenter {
+class FavoritesPresenter: RealEstateBasePresenter {
     
     // MARK: - Properties
     
@@ -24,9 +24,11 @@ class FavoritesPresenter {
     
     // MARK: - Init
     
-    init(interactor: FavoritesInteractor, coordinator: Coordinator) {
+    init(interactor: FavoritesInteractor, coordinator: Coordinator, imageManager: ImageManaging) {
         self.interactor = interactor
         self.coordinator = coordinator
+        
+        super.init(imageManager: imageManager)
     }
     
     // MARK: - Public API (functions)
@@ -38,6 +40,8 @@ class FavoritesPresenter {
             let response = try interactor.listFavorites()
             self.favoritesDataSource = response
             
+            imageManager.preloadImages(for: favoritesDataSource)
+            
             delegate?.reloadData()
             delegate?.hideLoading()
             
@@ -47,38 +51,44 @@ class FavoritesPresenter {
         }
     }
     
-    func removeFavorite(at index: Int) async {
+    func removeFavorite(at index: Int) {
         
         do {
             let favorite = favoritesDataSource[index]
-            try await interactor.removeFavorite(realEstate: favorite)
+            try interactor.removeFavorite(realEstate: favorite)
             favoritesDataSource.remove(at: index)
             
             delegate?.reloadData()
+            
         } catch {
             delegate?.showError(error)
         }
     }
-}
-
-// MARK: - RealEstateAdapterDelegate
-
-extension FavoritesPresenter: RealEstateAdapterDelegate {
     
-    func numberOfRows() -> Int {
+    // MARK: - RealEstateAdapterDelegate
+    
+    override func numberOfRows() -> Int {
         favoritesDataSource.count
     }
     
-    func item(at index: Int) -> RealEstate {
+    override func item(at index: Int) -> RealEstate {
         favoritesDataSource[index]
     }
     
-    func present(item: RealEstate, in cell: RealEstateTableViewCellInterface) {
-        cell.configureTexts(realEstate: item)
-    }
-    
-    func didSelectedItem(at index: Int) {
+    override func didSelectedItem(at index: Int) {
         //let item = favoritesDataSource[index]
         coordinator?.navigate(to: .propertyDetailSwiftUI)
+    }
+    
+    override func configureFavoriteAction(for item: RealEstate, in cell: RealEstateTableViewCellInterface) {
+        
+        cell.setFavoriteAction { [weak self] in
+            guard let self = self,
+                  let index = self.findIndex(for: item.propertyCode, in: self.favoritesDataSource) else {
+                return
+            }
+            
+            self.removeFavorite(at: index)
+        }
     }
 }

@@ -9,6 +9,7 @@ protocol RealEstateTableViewCellInterface {
     func configureTexts(realEstate: RealEstate)
     func configureFavoriteButton(isFavorite: Bool)
     func setFavoriteAction(_ action: @escaping () -> Void)
+    func setImage(_ image: UIImage?)
 }
 
 class RealEstateTableViewCell: UITableViewCell {
@@ -31,7 +32,7 @@ class RealEstateTableViewCell: UITableViewCell {
         return view
     }()
     
-    private let propertyImageView: UIImageView = {
+    private let realEstateImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -122,7 +123,7 @@ class RealEstateTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        propertyImageView.image = nil
+        realEstateImageView.image = nil
         operationLabel.text = nil
         propertyTypeAddressLabel.text = nil
         districtMunicipalityLabel.text = nil
@@ -142,7 +143,7 @@ class RealEstateTableViewCell: UITableViewCell {
         
         contentView.addSubview(containerView)
         
-        containerView.addSubview(propertyImageView)
+        containerView.addSubview(realEstateImageView)
         containerView.addSubview(operationLabel)
         containerView.addSubview(propertyTypeAddressLabel)
         containerView.addSubview(districtMunicipalityLabel)
@@ -162,16 +163,16 @@ class RealEstateTableViewCell: UITableViewCell {
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             
-            propertyImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
-            propertyImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
-            propertyImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
-            propertyImageView.heightAnchor.constraint(equalToConstant: 180),
+            realEstateImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
+            realEstateImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
+            realEstateImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
+            realEstateImageView.heightAnchor.constraint(equalToConstant: 180),
             
-            operationLabel.topAnchor.constraint(equalTo: propertyImageView.topAnchor, constant: 8),
-            operationLabel.leadingAnchor.constraint(equalTo: propertyImageView.leadingAnchor, constant: 8),
+            operationLabel.topAnchor.constraint(equalTo: realEstateImageView.topAnchor, constant: 8),
+            operationLabel.leadingAnchor.constraint(equalTo: realEstateImageView.leadingAnchor, constant: 8),
             operationLabel.heightAnchor.constraint(equalToConstant: 24),
             
-            propertyTypeAddressLabel.topAnchor.constraint(equalTo: propertyImageView.bottomAnchor, constant: 12),
+            propertyTypeAddressLabel.topAnchor.constraint(equalTo: realEstateImageView.bottomAnchor, constant: 12),
             propertyTypeAddressLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
             propertyTypeAddressLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
             
@@ -196,8 +197,8 @@ class RealEstateTableViewCell: UITableViewCell {
         ])
         
         NSLayoutConstraint.activate([
-            favoriteButton.topAnchor.constraint(equalTo: propertyImageView.topAnchor, constant: 8),
-            favoriteButton.trailingAnchor.constraint(equalTo: propertyImageView.trailingAnchor, constant: -8),
+            favoriteButton.topAnchor.constraint(equalTo: realEstateImageView.topAnchor, constant: 8),
+            favoriteButton.trailingAnchor.constraint(equalTo: realEstateImageView.trailingAnchor, constant: -8),
             favoriteButton.widthAnchor.constraint(equalToConstant: 44),
             favoriteButton.heightAnchor.constraint(equalToConstant: 44)
         ])
@@ -219,7 +220,7 @@ extension RealEstateTableViewCell: RealEstateTableViewCellInterface {
         operationLabel.text = realEstate.getOperationLabel()
         operationLabel.backgroundColor = realEstate.getOperationColor()
         
-        propertyTypeAddressLabel.text = realEstate.fullAddress().capitalized
+        propertyTypeAddressLabel.text = realEstate.fullAddress()
         districtMunicipalityLabel.text = realEstate.getDistrict()
         priceLabel.text = realEstate.formatPrice()
         roomsSizeFloorLabel.text = realEstate.flatInfo()
@@ -236,5 +237,9 @@ extension RealEstateTableViewCell: RealEstateTableViewCellInterface {
     
     func setFavoriteAction(_ action: @escaping () -> Void) {
         self.favoriteAction = action
+    }
+    
+    func setImage(_ image: UIImage?) {
+        realEstateImageView.image = image ?? UIImage(systemName: "photo")
     }
 }

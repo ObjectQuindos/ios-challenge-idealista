@@ -33,7 +33,8 @@ class ListCoordinator: Coordinator {
     }
     
     func start() {
-        let realEstateViewController = dicontainer.realEstateFactory.makeModule(coordinator: self)
+        let imageManager: ImageManaging = dicontainer.imageManager
+        let realEstateViewController = dicontainer.realEstateFactory.makeModule(coordinator: self, imageManager: imageManager)
         navigationController.viewControllers = [realEstateViewController]
     }
     
@@ -47,7 +48,7 @@ class ListCoordinator: Coordinator {
             navigationController.pushViewController(view, animated: true)
             
         case .propertyDetailSwiftUI:
-            let detailView = dicontainer.realEstateDetailFactory.makeModule(coordinator: self)
+            let detailView = dicontainer.realEstateDetailFactory.makeModule(coordinator: self, imageManager: dicontainer.imageManager)
             let hostingController = UIHostingController(rootView: detailView)
             navigationController.pushViewController(hostingController, animated: true)
         }
@@ -65,7 +66,7 @@ extension ListCoordinator {
             navigationController.pushViewController(view, animated: true)
             
         case .propertyDetailSwiftUI:
-            let detailView = dicontainer.realEstateDetailFactory.makeModule(coordinator: self)
+            let detailView = dicontainer.realEstateDetailFactory.makeModule(coordinator: self, imageManager: dicontainer.imageManager)
             let hostingController = UIHostingController(rootView: detailView)
             navigationController.pushViewController(hostingController, animated: true)
         }

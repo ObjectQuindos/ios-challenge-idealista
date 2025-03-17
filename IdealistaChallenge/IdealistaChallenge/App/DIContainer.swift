@@ -16,6 +16,8 @@ protocol DependencyContainer {
 
 final class AppDependencyContainer: DependencyContainer {
     
+    let imageManager: ImageManaging = ImageManager()
+    
     var realEstateFactory: RealEstateFactory {
         return RealEstateFactory()
     }

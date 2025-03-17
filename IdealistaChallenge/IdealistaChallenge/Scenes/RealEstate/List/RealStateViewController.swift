@@ -53,9 +53,14 @@ class RealEstateViewController: BaseViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.syncFavoritesStatus()
+    }
+    
     private func setupUI() {
         
-        title = "Propiedades"
+        title = LocalizationKeys.real_estate.localized
         view.backgroundColor = .primarySoftColor
         view.addSubview(tableView)
         
@@ -114,7 +119,7 @@ extension RealEstateViewController: RealEstateListViewProtocol {
     func showError(_ error: Error) {
         
         DispatchQueue.main.async {
-            self.showAlert(title: "Error", message: error.localizedDescription)
+            self.showAlert(title: LocalizationKeys.error.localized, message: error.localizedDescription)
             self.endRefreshControl()
         }
     }

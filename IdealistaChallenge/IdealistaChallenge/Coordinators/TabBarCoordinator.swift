@@ -66,7 +66,7 @@ class TabBarCoordinator: Coordinator {
         favoritesCoordinator?.start()
         
         listNavigationController.tabBarItem = UITabBarItem(
-            title: "Real Estate",
+            title: LocalizationKeys.real_estate.localized,
             image: UIImage(systemName: "house"),
             selectedImage: UIImage(systemName: "house.fill")
         )

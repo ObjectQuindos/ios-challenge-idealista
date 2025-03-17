@@ -91,7 +91,7 @@ class BaseViewController: UIViewController {
     func showAlert(title: String, message: String, okAction: (() -> Void)? = nil) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        let okAction = UIAlertAction(title: "Aceptar", style: .default) { _ in
+        let okAction = UIAlertAction(title: LocalizationKeys.accept.localized, style: .default) { _ in
             okAction?()
         }
         

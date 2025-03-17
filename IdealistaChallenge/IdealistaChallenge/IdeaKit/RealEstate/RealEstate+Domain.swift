@@ -9,48 +9,30 @@ extension RealEstate {
     
     func formatPrice() -> String {
         
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.groupingSeparator = "."
-        formatter.decimalSeparator = ","
-        
-        if let formattedNumber = formatter.string(from: NSNumber(value: self.price)) {
-            return "\(formattedNumber) \(self.priceInfo.price.currencySuffix)"
-        }
-        
-        return "\(self.price) \(self.priceInfo.price.currencySuffix)"
+        return PropertyFormatters.formatPrice(
+            price: self.price,
+            currencySuffix: self.priceInfo.price.currencySuffix
+        )
     }
     
     func formatSize() -> String {
-        return "\(Int(self.size)) m²"
+        return PropertyFormatters.sizeFormat(size: self.size)
     }
     
     func getFloor() -> String {
-        var floorLocalized = "Planta "
-        floorLocalized.append(self.floor)
-        return floorLocalized
+        return PropertyFormatters.floorDescription(floor: self.floor)
     }
     
     func flatInfo() -> String {
-        let roomsText = self.rooms == 1 ? "habitación" : "habitaciones"
-        let bathroomsText = self.bathrooms == 1 ? "baño" : "baños"
+        
+        let roomsText = self.rooms == 1 ? LocalizationKeys.room.localized : LocalizationKeys.rooms.localized
+        let bathroomsText = self.bathrooms == 1 ? LocalizationKeys.bathroom.localized : LocalizationKeys.bathrooms.localized
         
         return "\(self.rooms) \(roomsText) · \(self.bathrooms) \(bathroomsText) · \(self.formatSize()) · \(self.getFloor())"
     }
     
     func getOperationLabel() -> String {
-        
-        switch self.operation {
-            
-        case "sale":
-            return "Venta"
-            
-        case "rent":
-            return "Alquiler"
-            
-        default:
-            return self.operation.capitalized
-        }
+        return PropertyFormatters.operationLabel(operation: self.operation)
     }
     
     func getAddress() -> String {
@@ -58,10 +40,10 @@ extension RealEstate {
     }
     
     func fullAddress() -> String {
-        return "\(propertyType) en \(getAddress())"
+        return "\(propertyType.localized) \(LocalizationKeys.i_n.localized) \(getAddress())"
     }
     
     func getDistrict() -> String {
-        district + ", " + municipality
+        return PropertyFormatters.districtFormat(district: district, municipality: municipality)
     }
 }

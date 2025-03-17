@@ -5,15 +5,11 @@
 
 import Foundation
 
-class RealEstateDetailViewModel: ObservableObject {
+class RealEstateDetailViewModel: BaseViewModel {
     
-    // MARK: - Published properties
+    // MARK: - Properties
     
     @Published var realEstateDetail: RealEstateDetail?
-    @Published var isLoading: Bool = false
-    @Published var errorMessage: String?
-    
-    // MARK: - Dependencies
     
     private let interactor: RealEStateInteractor
     private weak var coordinator: Coordinator?
@@ -31,15 +27,23 @@ class RealEstateDetailViewModel: ObservableObject {
     func loadPropertyDetail() async {
         
         isLoading = true
-        errorMessage = nil
+        error = nil
         
         do {
             self.realEstateDetail = try await interactor.detailRealEstate()
             self.isLoading = false
+            isEmptySourceData = realEstateDetail == nil
             
         } catch {
-            self.errorMessage = error.localizedDescription
+            self.error = error
             self.isLoading = false
         }
+    }
+}
+
+extension RealEstateDetailViewModel: ContentStateViewModel {
+    
+    var contentState: ContentState {
+        determineContentState(isLoading: isLoading, error: error, isEmpty: isEmptySourceData, retryAction: nil, retryAsyncAction: { })
     }
 }

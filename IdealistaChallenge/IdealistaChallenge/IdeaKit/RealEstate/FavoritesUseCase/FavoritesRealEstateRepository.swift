@@ -21,9 +21,11 @@ protocol RealEstateRepository {
 class FavoritesRealEstateRepository: RealEstateRepository {
     
     let coreDataStack: CoreDataStack
+    private let mapper: RealEstateEntityMapper
     
-    init(coreDataStack: CoreDataStack = CoreDataStack.shared) {
+    init(coreDataStack: CoreDataStack = CoreDataStack.shared, mapper: RealEstateEntityMapper = RealEstateEntityMapper()) {
         self.coreDataStack = coreDataStack
+        self.mapper = mapper
     }
     
     func getAllRealEstates() -> [RealEstate] {
@@ -32,8 +34,9 @@ class FavoritesRealEstateRepository: RealEstateRepository {
         
         do {
             let entities = try coreDataStack.viewContext.fetch(fetchRequest)
+            
             return entities.compactMap { entity in
-                return convertToRealEstate(entity)
+                return mapper.mapToDomain(entity: entity)
             }
             
         } catch {
@@ -49,8 +52,9 @@ class FavoritesRealEstateRepository: RealEstateRepository {
         fetchRequest.fetchLimit = 1
         
         do {
+            
             if let entity = try coreDataStack.viewContext.fetch(fetchRequest).first {
-                return convertToRealEstate(entity)
+                return mapper.mapToDomain(entity: entity)
             }
             
             return nil
@@ -61,7 +65,7 @@ class FavoritesRealEstateRepository: RealEstateRepository {
         }
     }
     
-    func save(realEstate: RealEstate) {
+    /*func save(realEstate: RealEstate) {
         
         let fetchRequest: NSFetchRequest<RealEstateEntity> = RealEstateEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "propertyCode == %@", realEstate.propertyCode)
@@ -80,6 +84,18 @@ class FavoritesRealEstateRepository: RealEstateRepository {
             
             configureRealEstateEntity(entity, with: realEstate)
             
+            try coreDataStack.viewContext.save()
+            
+        } catch {
+            print("Error al guardar propiedad: \(error)")
+        }
+    }*/
+    
+    func save(realEstate: RealEstate) {
+        
+        let _ = mapper.mapToEntity(domain: realEstate, in: coreDataStack.viewContext)
+        
+        do {
             try coreDataStack.viewContext.save()
             
         } catch {
@@ -132,18 +148,22 @@ class FavoritesRealEstateRepository: RealEstateRepository {
             // if favorite, remove it
             delete(realEstate: realEstate)
             // return with isFavorite to false
-            return createUpdatedRealEstate(from: realEstate, isFavorite: false)
+            return RealEstateBuilder.from(realEstate: realEstate)
+                .withFavorite(false)
+                .build()
             
         } else {
-            
             // if no favorite, add it
             // Create copy with isFavorite to true
-            let updatedRealEstate = createUpdatedRealEstate(from: realEstate, isFavorite: true)
+            let updatedRealEstate = RealEstateBuilder.from(realEstate: realEstate)
+                .withFavorite(true)
+                .build()
+            
             save(realEstate: updatedRealEstate)
             return updatedRealEstate
         }
     }
-    
+        
     func isRealEstateFavorite(propertyCode: String) -> Bool {
         
         let fetchRequest: NSFetchRequest<RealEstateEntity> = RealEstateEntity.fetchRequest()
@@ -158,5 +178,6 @@ class FavoritesRealEstateRepository: RealEstateRepository {
             print("Error al verificar si la propiedad es favorita: \(error)")
             return false
         }
+        
     }
 }

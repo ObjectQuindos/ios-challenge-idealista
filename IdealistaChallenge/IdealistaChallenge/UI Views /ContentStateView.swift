@@ -66,8 +66,9 @@ struct ContentStateModifier<EmptyContent: View, ErrorContent: View, LoadingConte
         
         @ViewBuilder errorContent: @escaping (Error, Action?, AsyncAction?) -> ErrorContent = { error, retryAction, retryAsyncAction in
              
-            
              VStack(spacing: 16) {
+        
+                Spacer()
                  /*Image(systemName: "exclamationmark.triangle")
                      .font(.system(size: 40))
                      .foregroundColor(.red)*/
@@ -92,6 +93,8 @@ struct ContentStateModifier<EmptyContent: View, ErrorContent: View, LoadingConte
                     }
                  }
                  .buttonStyle(.borderedProminent)
+        
+                Spacer()
              }
              .padding()
         },
@@ -99,14 +102,21 @@ struct ContentStateModifier<EmptyContent: View, ErrorContent: View, LoadingConte
         @ViewBuilder loadingContent: @escaping () -> LoadingContent = {
             
             VStack {
+        
+                Spacer()
+        
                 ProgressView()
                     .scaleEffect(1.5)
-                
+                    .padding()
+        
                 Text("Loading...")
-                    .font(.callout)
-                    .foregroundColor(.secondary)
-                    .padding(.top)
+                    .font(.headline)
+                    .foregroundColor(.gray)
+        
+                Spacer()
             }
+            .frame(maxWidth: .infinity, minHeight: 300)
+            
         }
     ) {
         self.state = state

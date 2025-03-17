@@ -4,6 +4,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 struct IdealistaColors {
     //rgb(221,229,182)
@@ -59,6 +60,45 @@ extension UIColor {
     }
 }
 
+extension Color {
+    
+    static var primaryColor: Color {
+        return Color(UIColor.primaryColor)
+    }
+    
+    static var primarySoftColor: Color {
+        return Color(UIColor.primarySoftColor)
+    }
+    
+    static var secondaryColor: Color {
+        return Color(UIColor.secondaryColor)
+    }
+    
+    static var tertiaryColor: Color {
+        return Color(UIColor.tertiaryColor)
+    }
+    
+    static var backgroundCustomColor: Color {
+        return Color(UIColor.backgroundCustomColor)
+    }
+    
+    static var cardBackgroundColor: Color {
+        return Color(UIColor.cardBackgroundColor)
+    }
+    
+    static var darkTextColor: Color {
+        return Color(UIColor.darkTextColor)
+    }
+    
+    static var mediumTextColor: Color {
+        return Color(UIColor.mediumTextColor)
+    }
+    
+    static var lightTextColor: Color {
+        return Color(UIColor.lightTextColor)
+    }
+}
+
 extension RealEstate {
     
     func getOperationColor() -> UIColor {
@@ -73,6 +113,24 @@ extension RealEstate {
             
         default:
             return .primaryColor
+        }
+    }
+}
+
+extension RealEstateDetail {
+    
+    func getOperationColor() -> Color {
+        
+        switch self.operation {
+            
+        case "sale":
+            return Color(UIColor.secondaryColor)
+            
+        case "rent":
+            return Color(UIColor.tertiaryColor)
+            
+        default:
+            return Color(UIColor.primaryColor)
         }
     }
 }

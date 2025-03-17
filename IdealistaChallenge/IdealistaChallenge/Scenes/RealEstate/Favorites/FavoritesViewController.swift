@@ -84,6 +84,7 @@ extension FavoritesViewController: FavoritesViewProtocol {
     func reloadData() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
+            self.updateEmptyState()
         }
     }
     
