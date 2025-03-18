@@ -41,4 +41,5 @@ struct LocalizationKeys {
     static let type = "type"
     static let extras = "extras"
     static let location = "location"
+    static let month = "month"
 }

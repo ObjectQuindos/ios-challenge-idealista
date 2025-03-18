@@ -33,19 +33,27 @@ class FavoritesInteractor {
     
     func syncFavoriteStatus(realEstate: RealEstate) -> RealEstate {
         
-        let isFavorite = isRealEstateFavorite(propertyCode: realEstate.propertyCode)
+        let favorites = try? listFavorites()
         
-        // Si el estado actual es diferente del que está en el modelo
-        if isFavorite != (realEstate.isFavorite ?? false) {
-            return RealEstateBuilder.from(realEstate: realEstate)
-                .withFavorite(isFavorite)
-                .build()
+        if let favorites = favorites, let favorite = favorites.first(where: { $0.propertyCode == realEstate.propertyCode }) {
+            
+            // it is in favourites
+            var updatedRealEstate = realEstate
+            updatedRealEstate.isFavorite = true
+            updatedRealEstate.createdAt = favorite.createdAt
+            return updatedRealEstate
+            
+        } else {
+            
+            // not in favourites
+            var updatedRealEstate = realEstate
+            updatedRealEstate.isFavorite = false
+            updatedRealEstate.createdAt = nil
+            return updatedRealEstate
         }
-        
-        return realEstate
     }
     
-    // Método para sincronizar una lista de propiedades
+    // sync list of properties
     func syncFavoriteStatus(realEstates: [RealEstate]) -> [RealEstate] {
         return realEstates.map { syncFavoriteStatus(realEstate: $0) }
     }

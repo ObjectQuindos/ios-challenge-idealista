@@ -28,7 +28,6 @@ enum ContentState: Equatable {
             
         case (.empty(let lhsMsg), .empty(let rhsMsg)): return lhsMsg == rhsMsg
             
-            // Nota: No comparamos el error específico o la acción, solo el tipo de estado
         case (.error, .error): return true
             
         default: return false

@@ -7,7 +7,7 @@ import UIKit
 import SwiftUI
 
 struct IdealistaColors {
-    //rgb(221,229,182)
+    
     static let primary = UIColor(red: 217/255, green: 237/255, blue: 146/255, alpha: 1.0)
     static let primarySoft = UIColor(red: 221/255, green: 229/255, blue: 182/255, alpha: 1.0)
     static let secondary = UIColor(red: 46/255, green: 117/255, blue: 182/255, alpha: 1.0)

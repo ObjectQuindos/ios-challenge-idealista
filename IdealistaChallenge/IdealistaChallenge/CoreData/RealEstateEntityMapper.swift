@@ -111,7 +111,7 @@ class RealEstateEntityMapper {
         return entity
     }
     
-    // MARK: - Métodos privados para mapeo de entidades
+    // MARK: - Entites mapper
     
     private func mapPriceInfoFromEntity(_ entity: RealEstateEntity) -> PriceInfo {
         
@@ -176,7 +176,7 @@ class RealEstateEntityMapper {
         return nil
     }
     
-    // MARK: - Métodos privados para configuración de entidades relacionadas
+    // MARK: - Relationship entities
     
     private func configurePriceInfoEntity(for entity: RealEstateEntity, with priceInfo: PriceInfo, in context: NSManagedObjectContext) {
         
@@ -193,14 +193,12 @@ class RealEstateEntityMapper {
     private func configureMultimediaEntity(for entity: RealEstateEntity, with multimedia: Multimedia, in context: NSManagedObjectContext) {
         let multimediaEntity = entity.multimedia ?? MultimediaEntity(context: context)
         
-        // Eliminar imágenes existentes
         if let existingImages = multimediaEntity.images as? Set<ImageDataEntity> {
             for imageEntity in existingImages {
                 context.delete(imageEntity)
             }
         }
         
-        // Crear nuevas imágenes
         let imageEntities = multimedia.images.map { imageData -> ImageDataEntity in
             let imageEntity = ImageDataEntity(context: context)
             imageEntity.url = imageData.url

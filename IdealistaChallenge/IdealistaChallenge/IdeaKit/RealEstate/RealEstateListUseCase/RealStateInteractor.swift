@@ -5,7 +5,7 @@
 
 import Foundation
 
-final class RealEStateInteractor {
+class RealEStateInteractor {
     
     private let service: RealStateService
     

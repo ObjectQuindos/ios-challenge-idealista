@@ -5,7 +5,12 @@
 
 import InfraLayerSDK
 
-final class RealStateService: Service {
+protocol RealStateServicing {
+    func listRealEState() async throws -> [RealEstate]
+    func detailRealEState() async throws -> RealEstateDetail
+}
+
+class RealStateService: Service {
     
     private let client: APIClientProtocol
     

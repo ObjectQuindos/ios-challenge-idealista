@@ -36,8 +36,6 @@ class RealEstateBuilder {
         self.propertyCode = propertyCode
     }
     
-    // Métodos para configurar propiedades básicas
-    
     func withThumbnail(_ thumbnail: String) -> RealEstateBuilder {
         self.thumbnail = thumbnail
         return self
@@ -88,8 +86,6 @@ class RealEstateBuilder {
         return self
     }
     
-    // Métodos para configurar propiedades de ubicación
-    
     func withAddress(_ address: String) -> RealEstateBuilder {
         self.address = address
         return self
@@ -131,8 +127,6 @@ class RealEstateBuilder {
         return self
     }
     
-    // Métodos para configurar propiedades complejas
-    
     func withMultimedia(_ multimedia: Multimedia) -> RealEstateBuilder {
         self.multimedia = multimedia
         return self
@@ -152,8 +146,6 @@ class RealEstateBuilder {
         self.isFavorite = isFavorite
         return self
     }
-    
-    // Método para construir el objeto final
     
     func build() -> RealEstate {
         
@@ -188,7 +180,6 @@ class RealEstateBuilder {
         )
     }
     
-    // Método para modificar un RealEstate existente cambiando solo algunas propiedades
     static func from(realEstate: RealEstate) -> RealEstateBuilder {
         
         let builder = RealEstateBuilder(propertyCode: realEstate.propertyCode)
@@ -218,7 +209,6 @@ class RealEstateBuilder {
         return builder
     }
     
-    // Método útil para alternar el estado de favorito
     static func toggleFavorite(realEstate: RealEstate) -> RealEstate {
         return RealEstateBuilder.from(realEstate: realEstate)
             .withFavorite(!(realEstate.isFavorite ?? false))

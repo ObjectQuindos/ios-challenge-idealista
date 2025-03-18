@@ -65,7 +65,7 @@ enum PropertyFormatters {
     }
     
     static func communityFees(cost: Double, currency: String) -> String {
-        return "\(cost) \(currency)/mes"
+        return "\(cost) \(currency)/\(LocalizationKeys.month.localized)"
     }
     
     static func districtFormat(district: String, municipality: String) -> String {

@@ -236,6 +236,8 @@ extension RealEstateTableViewCell: RealEstateTableViewCellInterface {
         operationLabel.backgroundColor = realEstate.getOperationColor()
         
         savedDateLabel.text = realEstate.formatSaveDate()
+        savedDateLabel.isHidden = !(realEstate.isFavorite ?? false)
+        
         propertyTypeAddressLabel.text = realEstate.fullAddress()
         districtMunicipalityLabel.text = realEstate.getDistrict()
         priceLabel.text = realEstate.formatPrice()

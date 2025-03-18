@@ -65,32 +65,6 @@ class FavoritesRealEstateRepository: RealEstateRepository {
         }
     }
     
-    /*func save(realEstate: RealEstate) {
-        
-        let fetchRequest: NSFetchRequest<RealEstateEntity> = RealEstateEntity.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "propertyCode == %@", realEstate.propertyCode)
-        
-        do {
-            let results = try coreDataStack.viewContext.fetch(fetchRequest)
-            
-            let entity: RealEstateEntity
-            
-            if let existingEntity = results.first {
-                entity = existingEntity
-                
-            } else {
-                entity = RealEstateEntity(context: coreDataStack.viewContext)
-            }
-            
-            configureRealEstateEntity(entity, with: realEstate)
-            
-            try coreDataStack.viewContext.save()
-            
-        } catch {
-            print("Error al guardar propiedad: \(error)")
-        }
-    }*/
-    
     func save(realEstate: RealEstate) {
         
         let _ = mapper.mapToEntity(domain: realEstate, in: coreDataStack.viewContext)
