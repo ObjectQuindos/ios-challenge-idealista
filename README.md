@@ -36,7 +36,7 @@ The project follows VIPER and some MVVM for SwiftUI presentation with a focus on
 ## 🛠️ Technologies
 
 - **Swift**: Language development
-- **SwiftUI**: Apple's declarative UI framework
+- **SwiftUI & UIKit**: Apple's declarative UI framework
 - **CoreData**: Apple's data persistence framework
 - **URLSession**: For network communication
 - **Concurrency**: Use of async/await for asynchronous operations
