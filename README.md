@@ -42,3 +42,12 @@ The project follows VIPER and some MVVM for SwiftUI presentation with a focus on
 - **Concurrency**: Use of async/await for asynchronous operations
 - **Swift Package Manager**: Manage SDKs
 - **XCTest**: Unit Testing & UI Testing
+
+
+![List](https://github.com/user-attachments/assets/a148515c-bf88-4836-9991-f1b319dff7b4)
+
+![Detail](https://github.com/user-attachments/assets/c36c9f88-d9b5-4051-858b-1867f7a018ec)
+
+![Location](https://github.com/user-attachments/assets/2910e8aa-1101-4a81-8fb4-ff1c99bf844b)
+
+![Favourites](https://github.com/user-attachments/assets/c1ea07b8-50db-4728-aff3-eeb88c46d0f0)
